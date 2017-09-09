@@ -34,7 +34,7 @@ module.exports = class TweetFetcher extends Readable {
 
   _read() {
     if (this.latestTweet) {
-      this.push(this.latestTweet);
+      this.push(JSON.stringify(this.latestTweet));
       this.latestTweet = false;
     }
   }

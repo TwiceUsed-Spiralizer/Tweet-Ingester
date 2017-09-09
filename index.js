@@ -1,6 +1,9 @@
+// Node modules
+const { fork } = require('child_process');
 // Tweet-Ingester modules
 const TweetFetcher = require('./tweet-fetcher');
 
-const TF = new TweetFetcher({ objectMode: true });
+const TF = new TweetFetcher();
+const TP = fork('./tweet-processor/index.js', { stdio: ['pipe', 'inherit', 'inherit', 'ipc'] });
 
-TF.on('data', data => console.log(data[0].hashtags));
+TF.pipe(TP.stdin);
