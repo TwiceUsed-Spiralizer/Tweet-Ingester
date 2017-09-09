@@ -27,16 +27,15 @@ module.exports = class TweetFetcher extends Readable {
 
   tweetHandler(tweet) {
     if (isCandidate(tweet)) {
-      this.tweets.push(new Tweet(tweet));
+      this.latestTweet = new Tweet(tweet);
       this._read();
     }
   }
 
   _read() {
-    if (this.tweets.length) {
-      const tweets = this.tweets;
-      this.tweets = [];
-      this.push(tweets);
+    if (this.latestTweet) {
+      this.push(this.latestTweet);
+      this.latestTweet = false;
     }
   }
 }
