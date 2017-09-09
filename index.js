@@ -1,6 +1,6 @@
 // Tweet-Ingester modules
 const TweetFetcher = require('./tweet-fetcher');
 
-const TF = new TweetFetcher();
-TF.setEncoding('utf8');
-TF.on('data', console.log);
+const TF = new TweetFetcher({ objectMode: true });
+
+TF.on('data', data => console.log(data[0].hashtags));

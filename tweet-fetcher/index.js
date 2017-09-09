@@ -18,7 +18,7 @@ const isCandidate = function isCandidate(tweet) {
 
 module.exports = class TweetFetcher extends Readable {
   constructor(params = {}) {
-    super();
+    super(params);
     this.statusFilter = params.statusFilter || { language: 'en', track: 'a,e,i,o,u,y,A,E,I,O,U,Y, ' };
     this.tweets = [];
     this.tweetHandler.bind(this);
@@ -36,7 +36,7 @@ module.exports = class TweetFetcher extends Readable {
     if (this.tweets.length) {
       const tweets = this.tweets;
       this.tweets = [];
-      this.push(Buffer.from(JSON.stringify(tweets)));
+      this.push(tweets);
     }
   }
 }
