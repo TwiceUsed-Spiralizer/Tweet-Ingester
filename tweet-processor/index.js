@@ -1,5 +1,5 @@
 // Tweet-Processor modules
-const populate = require('./populate-recipients');
+const populate = require('./recipients');
 // const gender = require('./gender);
 // const elastic = require('./elastic');
 
