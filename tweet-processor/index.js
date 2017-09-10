@@ -8,7 +8,7 @@ const populate = require('./populate-recipients');
 //   gender(tweets, elastic);
 // };
 
-const next = () => {} //console.log;
+const next = console.log;
 
 // Respond to new tweets
 process.stdin.setEncoding('utf8');
