@@ -21,21 +21,15 @@ module.exports = class TweetFetcher extends Readable {
     super(params);
     this.statusFilter = params.statusFilter || { language: 'en', track: 'a,e,i,o,u,y,A,E,I,O,U,Y, ' };
     this.tweets = [];
-    this.tweetHandler.bind(this);
-    twitterStream(this.statusFilter).on('data', tweet => tweet && this.tweetHandler(tweet));
+    twitterStream(this.statusFilter).on('data', tweet => tweet && this.tweetHandler(tweet, 'utf8'));
   }
 
   tweetHandler(tweet) {
     if (isCandidate(tweet)) {
-      this.latestTweet = new Tweet(tweet);
-      this._read();
+      this.push(JSON.stringify(new Tweet(tweet)) + '\n');
     }
   }
 
   _read() {
-    if (this.latestTweet) {
-      this.push(JSON.stringify(this.latestTweet));
-      this.latestTweet = false;
-    }
   }
 }

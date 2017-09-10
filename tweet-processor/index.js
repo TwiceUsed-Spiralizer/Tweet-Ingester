@@ -1,13 +1,25 @@
 // Tweet-Processor modules
-const populate = require('./populate');
+const populate = require('./populate-recipients');
 // const gender = require('./gender);
 // const elastic = require('./elastic');
 
 // Set tweet processing middleware
-const next = (tweets) => {
-  gender(tweets, elastic);
-};
+// const next = (tweets) => {
+//   gender(tweets, elastic);
+// };
+
+const next = () => {} //console.log;
 
 // Respond to new tweets
 process.stdin.setEncoding('utf8');
-process.stdin.on('data', tweet => populate(JSON.parse(tweet), next));
+let tweetString = '';
+process.stdin.on('data', input => {
+  for (let char of input) {
+    if (char === '\n') {
+      populate(JSON.parse(tweetString), next);
+      tweetString = '';
+    } else {
+      tweetString += char;
+    }
+  }
+});

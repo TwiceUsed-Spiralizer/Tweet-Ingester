@@ -3,16 +3,30 @@ const { lookupUsers } = require('../tweet-fetcher/twitter-client');
 const { forEach, map, identity, includes } = require('lodash');
 
 let tweets = [];
-let userIds = [];
+let userIds = new Array(100);
+let index = 0;
 
-module.exports = function populate(tweets, next) {
-  // Push to array
+const populateRecipients = function populateRecipients(tweetsForNext, idsToLookup) {
+  return new Promise ((resolve, reject) => {
+    resolve(tweetsForNext);
+  });
+}
 
+module.exports = async function populate(tweet, next) {
   // Extract userIds to array
-
-  // if 100 userIds
-    // run someFunction with args({ tweets, userIds })
-    // create new array-- [] or [last tweet]
+  if (tweet.recipients.length + index <= 100) {
+    forEach(tweet.recipients, recipient => 
+      userIds[index++] = recipient.id_str
+    );
+    tweets.push(tweet);
+  } else {
+    const tweetsForNext = tweets;
+    tweets = new Array(100);
+    tweets[0] = tweet;
+    index = 0;
+    next(await populateRecipients(tweetsForNext, userIds));
+    userIds = [];
+  }
 
   // someFunction()
     // Do some internet stuff or whatever
