@@ -11,18 +11,18 @@ let index = 0;
 
 // Coordinates user lookup and populates recipients with objects
 const populateRecipients = throttle(function populateRecipients(tweetsForNext, idsToLookup) {
+  const userObjects = {};
+  const userIdToObject = recipient => userObjects[recipient] || null;
   return new Promise(async (resolve, reject) => {
     const userResults = await lookupUsers(idsToLookup);
-    const userObjects = {};
     forEach(userResults, user => {
       if (!userObjects[user.id_str]) {
         userObjects[user.id_str] = new User(user);
       }
     });
     forEach(tweetsForNext, tweet => {
-      tweet.recipients = map(tweet.recipients, recipient =>
-        userObjects[recipient] || null
-      ).filter(identity);
+      tweet.recipients = map(tweet.recipients, userIdToObject)
+        .filter(identity);
     });
     resolve(tweetsForNext.filter(tweet => tweet.recipients.length > 0));
   });
