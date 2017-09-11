@@ -2,7 +2,7 @@
 const { User } = require('../models');
 const { lookupUsers } = require('../tweet-fetcher/twitter-client');
 // Libraries
-const { forEach, map, identity, includes, throttle } = require('lodash');
+const { forEach, map, identity, includes, throttle, bind } = require('lodash');
 
 module.exports = class Recipients {
   constructor(next) {
@@ -10,6 +10,7 @@ module.exports = class Recipients {
     this.tweets = [];
     this.userIds = [];
     this.index = 0;
+    this.process = bind(this.process, this);
     this.populateRecipients = throttle(this.populateRecipients, 1000);
   }
 
