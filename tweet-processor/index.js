@@ -5,7 +5,7 @@ const Sentiment = require('./sentiment');
 const Elastic = require('./elastic');
 
 const elastic = new Elastic();
-const sentiment = new Sentiment(console.log);
+const sentiment = new Sentiment(elastic.process);
 const gender = new Gender(sentiment.process);
 const recipients = new Recipients(gender.process);
 
