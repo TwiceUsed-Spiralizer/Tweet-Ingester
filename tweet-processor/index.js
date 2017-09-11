@@ -1,10 +1,12 @@
 // Tweet-Processor modules
 const Recipients = require('./recipients');
 const Gender = require('./gender');
+const Sentiment = require('./sentiment');
 const Elastic = require('./elastic');
 
 const elastic = new Elastic();
-const gender = new Gender(elastic.process);
+const sentiment = new Sentiment(console.log);
+const gender = new Gender(sentiment.process);
 const recipients = new Recipients(gender.process);
 
 // Respond to new tweets
