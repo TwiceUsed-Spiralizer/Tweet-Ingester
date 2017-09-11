@@ -1,6 +1,6 @@
 // Tweet-Processor modules
 const populate = require('./recipients');
-// const gender = require('./gender);
+const gender = require('./gender');
 // const elastic = require('./elastic');
 
 // Set tweet processing middleware
@@ -8,7 +8,7 @@ const populate = require('./recipients');
 //   gender(tweets, elastic);
 // };
 
-const next = console.log;
+const next = gender;
 
 // Respond to new tweets
 process.stdin.setEncoding('utf8');

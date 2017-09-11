@@ -42,6 +42,7 @@ module.exports = async function populate(tweet, next) {
     userIds = [];
     tweets = tweetsForNext.splice(-1);
     index = 0;
-    next(await populateRecipients(tweetsForNext, idsToLookup));
+    const processedTweets = await populateRecipients(tweetsForNext, idsToLookup);
+    forEach(processedTweets, next);
   }
 };
