@@ -10,7 +10,7 @@ const { Transform } = require('stream');
 const { Tweet } = require('../models.js');
 const twitterStream = require('./twitter-client').stream;
 // Constants
-const TWO_MINUTES = 20 * 60 * 10;
+const CHECK_INTERVAL = 2 * 60 * 1000; // Two minute--means minimum time between reconnection attempts does not violate Twitter's policy
 
 const isCandidate = function isCandidate(tweet) {
   return tweet
@@ -25,7 +25,7 @@ module.exports = class TweetFetcher extends Transform {
     this.statusFilter = params.statusFilter || { language: 'en', track: 'a,e,i,o,u,y,A,E,I,O,U,Y, ' };
     this.tweetsReceived = 0;
     this.stream = twitterStream(this.statusFilter).on('data', this._transform.bind(this));
-    setInterval(this.checkStream.bind(this), TWO_MINUTES);
+    setInterval(this.checkStream.bind(this), CHECK_INTERVAL);
   }
 
   checkStream() {
