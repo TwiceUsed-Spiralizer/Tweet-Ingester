@@ -23,7 +23,6 @@ module.exports = class TweetFetcher extends Transform {
   constructor(params = {}) {
     super(params);
     this.statusFilter = params.statusFilter || { language: 'en', track: 'a,e,i,o,u,y,A,E,I,O,U,Y, ' };
-    this.tweets = [];
     this.tweetsReceived = 0;
     this.stream = twitterStream(this.statusFilter).on('data', this._transform.bind(this));
     setInterval(this.checkStream.bind(this), TWO_MINUTES);
@@ -39,10 +38,6 @@ module.exports = class TweetFetcher extends Transform {
     } else {
       this.tweetsReceived = 0;
     }
-  }
-
-  tweetHandler(tweet) {
-
   }
 
   _transform(tweet) {
