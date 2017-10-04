@@ -9,6 +9,8 @@ const { Transform } = require('stream');
 // Tweet-Ingester Modules
 const { Tweet } = require('../models.js');
 const twitterStream = require('./twitter-client').stream;
+// Constants
+const TWO_MINUTES = 20 * 60 * 1000;
 
 const isCandidate = function isCandidate(tweet) {
   return tweet
@@ -22,7 +24,21 @@ module.exports = class TweetFetcher extends Transform {
     super(params);
     this.statusFilter = params.statusFilter || { language: 'en', track: 'a,e,i,o,u,y,A,E,I,O,U,Y, ' };
     this.tweets = [];
-    twitterStream(this.statusFilter).on('data', this._transform.bind(this));
+    this.tweetsReceived = 0;
+    this.stream = twitterStream(this.statusFilter).on('data', this._transform.bind(this));
+    setInterval(this.checkStream.bind(this), TWO_MINUTES);
+  }
+
+  checkStream() {
+    console.log('Resetting count');
+    if(!this.tweetsReceived) {
+      this.stream.removeAllListeners();
+      console.log('Reconnecting');
+      this.tweetsReceived = 0;
+      this.stream = twitterStream(this.statusFilter).on('data', this._transform.bind(this));
+    } else {
+      this.tweetsReceived = 0;
+    }
   }
 
   tweetHandler(tweet) {
@@ -30,6 +46,8 @@ module.exports = class TweetFetcher extends Transform {
   }
 
   _transform(tweet) {
+    this.tweetsReceived++;
+    if (this.tweetsReceived > 499) console.log(500);
     if (isCandidate(tweet)) {
       this.push(JSON.stringify(new Tweet(tweet)) + '\n');
     }
