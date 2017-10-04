@@ -10,7 +10,7 @@ const { Transform } = require('stream');
 const { Tweet } = require('../models.js');
 const twitterStream = require('./twitter-client').stream;
 // Constants
-const TWO_MINUTES = 20 * 60 * 1000;
+const TWO_MINUTES = 20 * 60 * 10;
 
 const isCandidate = function isCandidate(tweet) {
   return tweet
@@ -29,7 +29,6 @@ module.exports = class TweetFetcher extends Transform {
   }
 
   checkStream() {
-    console.log('Resetting count');
     if(!this.tweetsReceived) {
       this.stream.removeAllListeners();
       console.log('Reconnecting');
@@ -42,7 +41,6 @@ module.exports = class TweetFetcher extends Transform {
 
   _transform(tweet) {
     this.tweetsReceived++;
-    if (this.tweetsReceived > 499) console.log(500);
     if (isCandidate(tweet)) {
       this.push(JSON.stringify(new Tweet(tweet)) + '\n');
     }
