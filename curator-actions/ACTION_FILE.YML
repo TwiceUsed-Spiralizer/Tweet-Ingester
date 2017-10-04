@@ -1,9 +1,11 @@
-action: delete-indices
-description: "Delete tweets more than two weeks old"
-filters:
-  - filtertype: age
-    source: creation_date
-    direction: older
-    unit: weeks
-    unit_count: 3
+actions:
+  1:
+    action: delete-indices
+    description: "Delete tweets more than two weeks old"
+    filters:
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: weeks
+        unit_count: 3
     
